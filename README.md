@@ -1,0 +1,1 @@
+#This is the work for "TSIDS: Spatial-temporal Fusion gating Multilayer Perceptron for Network Intrusion Detection"
