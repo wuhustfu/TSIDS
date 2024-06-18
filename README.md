@@ -2,7 +2,7 @@
 
 First, run temporal.py to obtain the temporal features by BiLSTM.
 
-Then, fusion_cgMLP.py is to fuse the temporal and spatial features, and this fusion feature will be processed by gMLP to do the classification 
+Then, run fusion_cgMLP.py to obtain spatial features and fuse the temporal and spatial features, and gMLP will process this fusion feature to do the classification 
 work.
 
 
