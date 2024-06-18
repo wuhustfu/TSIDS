@@ -69,20 +69,12 @@ y = df[y_col].values.astype('int64')
 
 # 划分训练集和测试集
 X_train2, X_test2, y_train2, y_test2 = train_test_split(X, y, test_size=0.4, random_state=0)
-#print(y_train2)
-#scaler = MinMaxScaler()
-#X_train2 = scaler.fit_transform(X_train2)
-#X_test2 = scaler.transform(X_test2)
+
 print(X_train2.shape, y_test2.shape)
 
 X_train1 = np.load('data/train_tonb.npy')  # (175341, 32)
 X_test1 = np.load('data/test_tonb.npy')  # (175341, 10)
 
-#X_train1 = X_train1[:118811]
-#X_test1 = X_test1[:29702]
-#X_train1 = X_train1[:360060]
-#X_test1 = X_test1[:240040]
-#print(X_train1.shape)
 y_train1 = np.load('data/bot_train_blabel.npy')
 y_test1 = np.load('data/bot_test_blabel.npy')
 
@@ -90,8 +82,7 @@ y_train = np.argmax(y_train1, axis=1)
 y_test = np.argmax(y_test1, axis=-1)
 X_train1 = pd.DataFrame(X_train1)
 X_train2 = pd.DataFrame(X_train2)
-#X_train12 = pd.DataFrame(X_train12)
-#X_test12 = pd.DataFrame(X_test12)
+
 X_test1 = pd.DataFrame(X_test1)
 X_test2 = pd.DataFrame(X_test2)
 X_train = pd.concat([X_train2, X_train1], axis=1)
@@ -164,12 +155,13 @@ class gMLP(nn.Module):
         log_probs = nn.functional.log_softmax(logits, dim=-1)
         return log_probs
 
-
+#自定义的参数 
 num_classes = #看具体的数据集种类
 d_model = 
 d_ffn = 
 seq_len = 
 depth = 
+epochs= 
 
 model = gMLP(num_classes, d_model, d_ffn, seq_len, depth).to(device)
 #model= gMLP(input_size=X_train2.shape[1], hidden_size=128, num_classes=2).to(device)
@@ -189,7 +181,7 @@ test_loader = DataLoader(test_dataset, batch_size=1024, shuffle=False)
 #accu =Accuracy(task='binary').cuda()
 #pre = Precision(task='binary').cuda()
 #recall =
-epochs= 50
+
 # 开始训练
 for epoch in range(epochs):  # 假设我们训练100个epoch
     Loss=[]
