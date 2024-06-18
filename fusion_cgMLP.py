@@ -138,8 +138,8 @@ class SpatialGatingUnit(nn.Module):
 #        residual = x
         u, v = x.chunk(2, dim=-1)
         v = self.norm(v)
-#        v = self.spatial_proj(v)
-        v = self.spatial_proj(v.transpose(-1, -2)).transpose(-1, -2)
+        v = self.spatial_proj(v)
+        
         return u * v
 
 
@@ -165,11 +165,11 @@ class gMLP(nn.Module):
         return log_probs
 
 
-num_classes = 2
-d_model = 100
-d_ffn = 10
-seq_len = 10
-depth = 10
+num_classes = #看具体的数据集种类
+d_model = 
+d_ffn = 
+seq_len = 
+depth = 
 
 model = gMLP(num_classes, d_model, d_ffn, seq_len, depth).to(device)
 #model= gMLP(input_size=X_train2.shape[1], hidden_size=128, num_classes=2).to(device)
@@ -230,25 +230,9 @@ for epoch in range(epochs):  # 假设我们训练100个epoch
        # _, predicted = torch.max(outputs.data, 1)
         elapsed = timeit.default_timer() - start_time
         predicted = torch.argmax(outputs, dim=1)
-        #predicted = predicted.reshape(-1).to(device)
-       # y_batch = y_batch.to(device)
-        #y_batch = torch.argmax(y_batch)
-        #y_batch = y_batch.cpu().numpy()
-        #predicted = predicted.cpu().numpy()
-       # _, predicted = torch.max(outputs.data, 1)
-       # true_labels.extend(y_batch.tolist())
-       # pred_labels.extend(predicted.tolist())
-        #true_labels = np.argmax(y_batch.tolist())
-        #pred_labels = np.argmax(predicted.cpu(), axis=0)
-       # val_pre = precision_score(true_labels, pred_labels, average=None)
-        # 计算召回率
-       # recall = recall_score(true_labels, pred_labels, average=None)
-       # F1 = f1_score(true_labels, pred_labels, average=None)
-        # 计算准确率
-       # val_acc = calculate_class_accuracies(true_labels, pred_labels)
+       
+       #
         # 计算精确率
-
-
         val_pre = precision_score(y_batch.cpu(), predicted.cpu(), average='binary')
         # 计算召回率
         recall = recall_score(y_batch.cpu(), predicted.cpu(), average='binary')
