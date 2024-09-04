@@ -235,7 +235,7 @@ for epoch in range(epochs):  # 假设我们训练100个epoch
             best_acc_test = val_acc
             best_model_wts = model.state_dict()
     model.load_state_dict(best_model_wts)
-    
+    model.eval()
     with torch.no_grad():
     true_labels = []
     pred_labels = []
