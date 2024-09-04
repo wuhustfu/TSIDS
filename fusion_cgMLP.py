@@ -181,7 +181,8 @@ test_loader = DataLoader(test_dataset, batch_size=1024, shuffle=False)
 #accu =Accuracy(task='binary').cuda()
 #pre = Precision(task='binary').cuda()
 #recall =
-
+best_acc_test = 0.0
+best_model_wts = None
 # 开始训练
 for epoch in range(epochs):  # 假设我们训练100个epoch
     Loss=[]
@@ -225,18 +226,33 @@ for epoch in range(epochs):  # 假设我们训练100个epoch
        
        #
         # 计算精确率
-        val_pre = precision_score(y_batch.cpu(), predicted.cpu(), average='binary')
+        #val_pre = precision_score(y_batch.cpu(), predicted.cpu(), average='binary')
         # 计算召回率
-        recall = recall_score(y_batch.cpu(), predicted.cpu(), average='binary')
-        F1 = f1_score(y_batch.cpu(), predicted.cpu(), average='binary')
+        #recall = recall_score(y_batch.cpu(), predicted.cpu(), average='binary')
+        #F1 = f1_score(y_batch.cpu(), predicted.cpu(), average='binary')
         val_acc = accuracy_score(y_batch.cpu(), predicted.cpu())
-        FAR = calculate_FAR(y_batch.cpu(), predicted.cpu())
+        if val_acc > best_acc_test:
+            best_acc_test = val_acc
+            best_model_wts = model.state_dict()
+    model.load_state_dict(best_model_wts)
+    
+    with torch.no_grad():
+    true_labels = []
+    pred_labels = []
+
+    for X_batch, y_batch in test_loader:
+        X_batch = X_batch.unsqueeze(1).to(device)
+        outputs = model(X_batch).to(device)
+        outputs = torch.squeeze(outputs)
+        predicted = torch.argmax(outputs, dim=1)
+
+        true_labels.extend(y_batch.cpu().numpy())
+        pred_labels.extend(predicted.cpu().numpy())
+    print(classification_report(true_labels, pred_labels, target_names=target_names, digits=4))
+    FAR = calculate_FAR(y_batch.cpu(), predicted.cpu())
       #  AUC = roc_auc_score()
         # 计算准确率
         #val_acc = calculate_class_accuracies(true_labels, pred_labels)
-    print('test accuracy:', val_acc)
-    print('test precision:', val_pre)
-    print('recall:', recall)
-    print('F1-score:', F1)
+    
     print(str(elapsed) + ' seconds')
     print('FAR:', FAR)
