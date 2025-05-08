@@ -75,8 +75,8 @@ print(X_train2.shape, y_test2.shape)
 X_train1 = np.load('data/train_tonb.npy')  # (175341, 32)
 X_test1 = np.load('data/test_tonb.npy')  # (175341, 10)
 
-y_train1 = np.load('data/bot_train_blabel.npy')
-y_test1 = np.load('data/bot_test_blabel.npy')
+y_train1 = np.load('data/ton_train_blabel.npy')
+y_test1 = np.load('data/ton_test_blabel.npy')
 
 y_train = np.argmax(y_train1, axis=1)
 y_test = np.argmax(y_test1, axis=-1)
@@ -94,8 +94,8 @@ X_test = scaler.transform(X_test)
 
 
 
-train_dataset = BotDataset(X_train, y_train2)
-test_dataset = BotDataset(X_test, y_test2)
+train_dataset = BotDataset(X_train, y_train1)
+test_dataset = BotDataset(X_test, y_test1)
 #print(X_train.shape,y_train.shape)
 # 构建gMLP模型
 # 这里只是一个示例，你需要根据实际情况来定义你的模型
