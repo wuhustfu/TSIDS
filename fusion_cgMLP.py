@@ -83,8 +83,33 @@ y_test = np.argmax(y_test1, axis=-1)
 X_train1 = pd.DataFrame(X_train1)
 X_train2 = pd.DataFrame(X_train2)
 
+class SpatialMappingLayer(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(SpatialMappingLayer, self).__init__()
+        self.fc = nn.Linear(input_dim, output_dim)
+        self.gate = nn.Linear(input_dim, output_dim)
+    
+    def forward(self, x):
+        proj = self.fc(x)
+        gate = torch.sigmoid(self.gate(x))
+        return proj * gate
+
+# --------------- CSV 部分的 Tensor 转换与空间映射 ---------------
+X_train_tensor = torch.tensor(X_train2, dtype=torch.float32)
+X_test_tensor  = torch.tensor(X_test2, dtype=torch.float32)
+spatial_feature_dim = 64
+spatial_mapping = SpatialMappingLayer(input_dim=X_train_tensor.shape[1], output_dim=spatial_feature_dim)
+
+X_train_spatial = spatial_mapping(X_train_tensor)
+X_test_spatial  = spatial_mapping(X_test_tensor)
+X_train2 = pd.DataFrame(X_train_spatial.detach().cpu().numpy(),
+                      columns=[f"csv_{i}" for i in range(X_train_tensor.shape[1])])
+
+X_test2 = pd.DataFrame(X_test_spatial.detach().cpu().numpy(),
+                      columns=[f"csv_{i}" for i in range(X_train_tensor.shape[1])])
+
 X_test1 = pd.DataFrame(X_test1)
-X_test2 = pd.DataFrame(X_test2)
+#X_test2 = pd.DataFrame(X_test2)
 X_train = pd.concat([X_train2, X_train1], axis=1)
 X_test = pd.concat([X_test2, X_test1], axis=1)
 
